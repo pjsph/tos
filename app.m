@@ -1,6 +1,7 @@
 function app(type, path)
     if type == "sender"
-        image = loadImage(path)
+        image = loadImage(path);
+        layer2(image);
     elseif type == "receiver"
         %TODO
     else
