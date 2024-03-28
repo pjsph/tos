@@ -1,12 +1,17 @@
-%raw_data = ones(10000,1);
+%raw_data = ones(100,1);
 %raw_data(1:2:size(raw_data)) = 0;
-%reshape(raw_data, [100 100]);
+%reshape(raw_data, [10 10]);
 %frames = formatFrame(raw_data);
+%timedFrames = addTimestamps(frames);
 %data = unformatFrame(frames);
 
 function layer2(data)
-    frames = formatFrame(data);
-    data = unformatFrame(frames)
+    %frames = formatFrame(data);
+    %timedFrames = cast(addTimestamps(frames), "double");
+    %assignin('base', 'simin', timedFrames');
+    %sim("tp5_5_emetteur_template_usrp.slx");
+    data = unformatFrame(data);
+    assignin('base', 'image', data);
 end
 
 function frames = formatFrame(raw_data)
@@ -30,9 +35,7 @@ function frames = formatFrame(raw_data)
     preamble = char(preamble);
     preamble = reshape(str2num(preamble), Nb_util, []);
 
-    data = [preamble ; data];
-
-    frames = data(:);
+    frames = [preamble ; data];
 end
 
 function data = unformatFrame(frame)
@@ -54,4 +57,16 @@ function data = unformatFrame(frame)
     data = data(:);
     data = data(1:image_size*image_size);
     data = reshape(data, [image_size image_size]);
+    data = cast(data, "uint8");
+end
+
+function timedFrames = addTimestamps(frames)
+    T_s = 1.8e-4;
+    t = 10;
+    T_t = t*T_s;
+
+    mul = 0:size(frames, 2)-1;
+    times = mul*T_t;
+
+    timedFrames = [times ; frames];
 end

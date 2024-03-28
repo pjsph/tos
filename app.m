@@ -3,7 +3,7 @@ function app(type, path)
         image = loadImage(path);
         layer2(image);
     elseif type == "receiver"
-        %TODO
+        %res = layer2()
     else
         error("Usage: app <sender|receiver> <image_path>");
     end
